@@ -1,0 +1,8 @@
+{
+  "files.exclude": {
+    "obj": true,
+    "Sharable.sln": true,
+    "bin": true,
+    "Properties": true
+  }
+}
