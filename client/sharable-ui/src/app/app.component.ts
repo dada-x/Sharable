@@ -1,20 +1,15 @@
 import { Component } from '@angular/core';
-import { CommonModule, formatDate } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
-import { AgGridModule } from 'ag-grid-angular';
+import { formatDate } from '@angular/common';
 import { ColDef, GridOptions } from 'ag-grid-community';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { map } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [CommonModule, RouterOutlet, AgGridModule, HttpClientModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  $games = this.httpClient.get<[]>('/api/gameList');
+  $games = this.httpClient.get<[]>('/sharable-ui/api/gameList');
 
   options: GridOptions = {
     tooltipShowDelay: 1000,

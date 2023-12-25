@@ -7,9 +7,6 @@ export class AppController {
 
   @Get('gameList')
   async gameList() {
-    const response = await fetch('http://localhost:5000/DocTable/GetXGPTable');
-    const data = await response.json();
-
-    return data;
+    return this.appService.fetchAll();
   }
 }
