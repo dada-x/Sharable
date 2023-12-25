@@ -1,0 +1,93 @@
+@import "ag-grid-community/styles/ag-grid.css";
+@import "ag-grid-community/styles/ag-theme-balham.css";
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+.main {
+  height: 100%;
+  margin: 10px;
+  overflow: hidden;
+}
+
+.content {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+.cell-active {
+  background: rgb(0, 98, 0);
+  color: white;
+  height: 22px;
+  margin-top: 1px;
+  line-height: 22px;
+  font-size: 12px;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 2px;
+}
+
+.cell-soon {
+  background: orange;
+  color: rgb(255, 255, 255);
+  height: 22px;
+  margin-top: 1px;
+  line-height: 22px;
+  font-size: 12px;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 2px;
+}
+
+.cell-90 {
+  background: rgb(0, 98, 0);
+  color: white;
+  height: 22px;
+  margin-top: 1px;
+  line-height: 22px;
+  font-size: 12px;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 2px;
+}
+
+.cell-80 {
+  background: rgb(0, 146, 83);
+  color: white;
+  height: 22px;
+  margin-top: 1px;
+  line-height: 22px;
+  font-size: 12px;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 2px;
+}
+
+.cell-60 {
+  background: rgb(0, 67, 98);
+  color: white;
+  height: 22px;
+  margin-top: 1px;
+  line-height: 22px;
+  font-size: 12px;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 2px;
+}
+
+.cell-s60 {
+  background: rgb(193, 0, 0);
+  color: white;
+  height: 22px;
+  margin-top: 1px;
+  line-height: 22px;
+  font-size: 12px;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 2px;
+}

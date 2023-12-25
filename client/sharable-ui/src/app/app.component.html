@@ -1,0 +1,14 @@
+<main class="main">
+  <div class="content">
+    <ag-grid-angular
+      class="ag-theme-balham"
+      style="height: 100%"
+      [rowData]="$games | async"
+      [columnDefs]="colDefs"
+      [gridOptions]="options"
+    >
+    </ag-grid-angular>
+  </div>
+</main>
+
+<router-outlet></router-outlet>

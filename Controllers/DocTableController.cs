@@ -20,8 +20,8 @@ public class DocTableController : ControllerBase
 
     [HttpGet]
     [Route("GetXGPTable")]
-    public async Task<XGPGame[]> GetXGPTable()
+    public XGPGame[] GetXGPTable()
     {
-        return await _dataTableProcessor.ParseXGPMasterListFromGoogleDrive();
+        return _dataTableProcessor.ParseXGPMasterListFromGoogleDrive();
     }
 }

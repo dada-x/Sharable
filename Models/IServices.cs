@@ -18,7 +18,7 @@ namespace Sharable.Models
 
     public interface IDataTableProcessor
     {
-        Task<XGPGame[]> ParseXGPMasterListFromGoogleDrive();
+        XGPGame[] ParseXGPMasterListFromGoogleDrive();
     }
 
     public interface IExcelService

@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 using FuzzySharp;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
@@ -6,7 +8,7 @@ using Sharable.Models;
 
 namespace Sharable.Services
 {
-    public class GameInfoService(IHttpClientFactory httpClientFactory) : IGameInfoService
+    public partial class GameInfoService(IHttpClientFactory httpClientFactory) : IGameInfoService
     {
 
         private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
@@ -56,21 +58,38 @@ namespace Sharable.Services
 
             var ids = new List<string>();
             var steamAppIdList = await GetSteamAppIdList();
-            games.Take(10).ToList().ForEach(game =>
+
+
+            var tasks = new List<Task<List<XGPGame>>>();
+
+            for (int i = 0; i < games.Count(); i += 20)
             {
-                game.SteamAppId = steamAppIdList?.FirstOrDefault(id => Fuzz.Ratio(id.EnName, game.EnName) > 90)?.AppId ?? string.Empty;
-            });
+                var batch = games.Skip(i).Take(20).ToList();
+                var index = i;
 
-            await BulkFetch(games.Take(10));
+                tasks.Add(Task.Run(async () =>
+                {
+                    batch.ForEach(game =>
+                    {
+                        game.SteamAppId = steamAppIdList?.FirstOrDefault(id => Fuzz.Ratio(id.EnName, game.EnName) > 90)?.AppId ?? string.Empty;
+                    });
 
-            return games.Take(10).ToList();
+                    return await BulkFetch(batch);
+                }));
+            }
+
+            var watcher = new Stopwatch();
+            watcher.Start();
+            Console.WriteLine($"merge info start [{DateTime.Now.ToLocalTime()}]");
+            var result = await Task.WhenAll([.. tasks]);
+            Console.WriteLine($"merge info end [{DateTime.Now.ToLocalTime()}], Elapsed {watcher.Elapsed.Seconds} s");
+            watcher.Stop();
+            return result.SelectMany(x => x).ToList();
         }
 
         private const string TrimC = "\"";
-        private async Task BulkFetch(IEnumerable<XGPGame> games)
+        private async Task<List<XGPGame>> BulkFetch(IEnumerable<XGPGame> games)
         {
-
-
             foreach (var game in games.Where(game => game.SteamAppId != string.Empty))
             {
                 var requestClient = _httpClientFactory.CreateClient();
@@ -90,13 +109,23 @@ namespace Sharable.Services
                 {
                     var resString = await response.Content.ReadAsStringAsync();
 
-                    game.CnName = JsonConvert.DeserializeObject<JToken>(resString)?[game.SteamAppId]?["data"]?["name"]?.ToString() ?? "";
+                    game.CnName = JsonConvert.DeserializeObject<JToken>(resString)?[game.SteamAppId]?["data"]?["name"]?.ToString() ?? game.CnName;
                     game.SteamPrice = JsonConvert.DeserializeObject<JToken>(resString)?[game.SteamAppId]?["data"]?["price_overview"]?["final_formatted"]?.ToString() ?? "";
                     game.SteamDeveloper = JsonConvert.DeserializeObject<JToken>(resString)?[game.SteamAppId]?["data"]?["developers"]?.ToString() ?? "";
 
-                    game.CnName = game.CnName.Replace(TrimC, string.Empty);
+                    game.CnName = SpaceRegex().Replace(game.CnName.Replace(TrimC, string.Empty), " ");
+                    game.SteamDeveloper = ContentRegex().Match(game.SteamDeveloper).Value;
                 }
+
             }
+
+            return games.ToList();
         }
+
+        [GeneratedRegex(@"\s+")]
+        private static partial Regex SpaceRegex();
+
+        [GeneratedRegex("(?<=\").+(?=\")")]
+        private static partial Regex ContentRegex();
     }
 }

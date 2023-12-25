@@ -8,7 +8,6 @@ namespace Sharable.Models
         public string APIKey { get; set; } = "";
         public string GoogleSpreadSheetId { get; set; } = "";
         public string GoogleMimeType { get; set; } = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-        public string LocalFile { get; set; } = "xgp_master_list.xlsx";
         public string[] GoogleDriveScopes { get; set; } = [DriveService.Scope.DriveReadonly];
     }
 
